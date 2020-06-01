@@ -10,7 +10,7 @@ function screenshot(i,date) {
   domtoimage.toBlob(document.getElementById('image'+i),{width:800,height:600})
     .then(function (blob) {
       console.log(blob);
-      saveAs(blob, date.replace(/\//g,'-')+'-'+i+'.png');
+      (window.saveAs||saveAs)(blob, date.replace(/\//g,'-')+'-'+i+'.png');
     })
     .catch(function (error) {
       console.error('oops, something went wrong!', error);
