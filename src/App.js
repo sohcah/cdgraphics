@@ -10,7 +10,7 @@ function screenshot(i,date) {
   domtoimage.toBlob(document.getElementById('image'+i),{width:800,height:600})
     .then(function (blob) {
       console.log(blob);
-      saveAs(blob, date.replace(/\//g,'-')+i+'.png');
+      saveAs(blob, date.replace(/\//g,'-')+'-'+i+'.png');
     })
     .catch(function (error) {
       console.error('oops, something went wrong!', error);
@@ -64,6 +64,7 @@ function App() {
     x[index] = value.toUpperCase();
     setSolutions(x);
   }
+  var [rachel,setRachel] = React.useState(true);
   // return (
   //   [[654,100,50,2,4,5,6]].map((l,gold)=><div className={gold?"image gold":"image"}>
   //     <div className="board" style={{width:600,height:400,padding:20,display:"flex",flexDirection:"column",justifyContent: "stretch"}}>
@@ -90,15 +91,35 @@ function App() {
   //   </div>)
   // );
   return <div>
-    <input placeholder="Letters" value={letters} onChange={(ev) => setLetters(ev.target.value)} />
-    {Object.keys(solutions).map(i => <><br /><input placeholder={`Solution ${Number(i) + 1}`} value={solutions[i]} onChange={(ev) => setSolution(i, ev.target.value)} /></>)}
-    <button onClick={() => setSolutions([...solutions, ""])}>Add</button>
+    <div style={{padding:4}}>
+      <div>Letters</div>
+      <input value={letters} onChange={(ev) => setLetters(ev.target.value)} />
+    </div>
+    <div style={{padding:4}}>
+      <div>Solutions</div>
+      {Object.keys(solutions).map(i => <><input style={{marginTop:i!=="0"?4:0}} placeholder={`Solution ${Number(i) + 1}`} value={solutions[i]} onChange={(ev) => setSolution(i, ev.target.value)} /><br /></>)}
+      <button style={{marginTop:4}} onClick={() => setSolutions([...solutions, ""])}>Add</button>
+    </div>
+    
+    
 
-    <br /><input placeholder="Line 1" value={l1} onChange={(ev) => setL1(ev.target.value)} />
-    <br /><input placeholder="Line 2" value={l2} onChange={(ev) => setL2(ev.target.value)} />
-    <br /><input placeholder="Line 3" value={l3} onChange={(ev) => setL3(ev.target.value)} />
-    <br /><input placeholder="Line 4" value={l4} onChange={(ev) => setL4(ev.target.value)} />
-    <br /><input placeholder="Date" value={date} onChange={(ev) => setDate(ev.target.value)} />
+    <div style={{padding:4}}>
+      <div>Funny Text</div>
+      <input placeholder="Line 1" value={l1} onChange={(ev) => setL1(ev.target.value)} /><br/>
+      <input style={{marginTop:4}} placeholder="Line 2" value={l2} onChange={(ev) => setL2(ev.target.value)} /><br/>
+      <input style={{marginTop:4}} placeholder="Line 3" value={l3} onChange={(ev) => setL3(ev.target.value)} /><br/>
+      <input style={{marginTop:4}} placeholder="Line 4" value={l4} onChange={(ev) => setL4(ev.target.value)} /><br/>
+    </div>
+    <div style={{padding:4}}>
+      <div>Date</div>
+      <input placeholder="Date" value={date} onChange={(ev) => setDate(ev.target.value)} />
+    </div>
+    <div style={{padding:4}}>
+      Rachel <input type="checkbox" checked={rachel} onChange={(ev) => setRachel(ev.target.checked)} />
+    </div>
+    <div style={{padding:4}}>
+      <div>Double-Click an image to save</div>
+    </div>
     {(
       ["", ...solutions].map((i,index) => generateLetterTiles(letters.toUpperCase(), i, { gold: false, index })).map(({ top, bottom, gold, index }) => <div onDoubleClick={()=>screenshot(index==0?'M':`S${index}`,date)} id={`image${index==0?'M':`S${index}`}`} className={gold ? "image gold" : "image"}>
         <div className="board" style={{ width: 600, height: 250, padding: 20, display: "flex", flexDirection: "column", justifyContent: "stretch" }}>
@@ -130,7 +151,7 @@ function App() {
           {l3}<br />
           {l4}&nbsp;
         </div>
-        <img className={gold ? "rachelgold" : "rachel"} src={gold ? RachelGold : RachelNormal} />
+        {rachel&&<img className={gold ? "rachelgold" : "rachel"} src={gold ? RachelGold : RachelNormal} />}
       </div>)
     )}
   </div>;
