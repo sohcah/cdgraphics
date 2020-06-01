@@ -122,10 +122,10 @@ function App() {
       Rachel <input type="checkbox" checked={rachel} onChange={(ev) => setRachel(ev.target.checked)} />
     </div>
     <div style={{padding:4}}>
-      <div>Double-Click an image to save</div>
+      <div>Click an image to save</div>
     </div>
     {(
-      ["", ...solutions].map((i,index) => generateLetterTiles(letters.toUpperCase(), i, { gold: false, index })).map(({ top, bottom, gold, index }) => <div onDoubleClick={()=>screenshot(index==0?'M':`S${index}`,date)} id={`image${index==0?'M':`S${index}`}`} className={gold ? "image gold" : "image"}>
+      ["", ...solutions].map((i,index) => generateLetterTiles(letters.toUpperCase(), i, { gold: false, index })).map(({ top, bottom, gold, index }) => <div onClick={()=>screenshot(index==0?'M':`S${index}`,date)} id={`image${index==0?'M':`S${index}`}`} className={gold ? "image gold" : "image"}>
         <div className="board" style={{ width: 600, height: 250, padding: 20, display: "flex", flexDirection: "column", justifyContent: "stretch" }}>
           <div className="rowWrapper">
             <div className="row">
