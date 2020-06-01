@@ -7,12 +7,15 @@ import {saveAs} from 'file-saver';
 
 function screenshot(i,date) {
   console.log(i,date);
-  domtoimage.toBlob(document.getElementById('image'+i),{width:800,height:600})
+  domtoimage.toBlob(document.getElementById('image'+i),{
+    width:800,
+    height:600
+  })
     .then(function (blob) {
-      console.log(blob);
-      (window.saveAs||saveAs)(blob, date.replace(/\//g,'-')+'-'+i+'.png');
+      window.saveAs(blob, date.replace(/\//g,'-') + '-' + i + '.png');
     })
     .catch(function (error) {
+      alert(error);
       console.error('oops, something went wrong!', error);
     });
 }
@@ -65,6 +68,30 @@ function App() {
     setSolutions(x);
   }
   var [rachel,setRachel] = React.useState(true);
+  React.useEffect(()=>{
+    var data = JSON.parse(localStorage.data||"{}");
+    setLetters(data.letters);
+    setSolutions(data.solutions)
+    setL1(data.l1)
+    setL2(data.l2)
+    setL3(data.l3)
+    setL4(data.l4)
+    setDate(data.date);
+    setRachel(data.rachel);
+  },[])
+  function clear() {
+    setLetters("");
+    setSolutions([""])
+    setL1("")
+    setL2("")
+    setL3("")
+    setL4("")
+    setDate("");
+    setRachel(true);
+  }
+  React.useEffect(()=>{
+    localStorage.data = JSON.stringify({letters,solutions,l1,l2,l3,l4,date,rachel});
+  },[letters,solutions.join(','),l1,l2,l3,l4,date,rachel])
   // return (
   //   [[654,100,50,2,4,5,6]].map((l,gold)=><div className={gold?"image gold":"image"}>
   //     <div className="board" style={{width:600,height:400,padding:20,display:"flex",flexDirection:"column",justifyContent: "stretch"}}>
@@ -94,6 +121,7 @@ function App() {
   <div style={{padding:4}}>
     <div>Original design by <a href="https://www.facebook.com/100009965523845">Chloe Jones</a> for the <a href="https://www.facebook.com/groups/countdowners/">Countdowners Facebook group</a></div>
     <div>Generator developed by <a href="https://sohcah.dev">sohcah</a>, and open-sourced on <a href="https://github.com/sohcah/cdgraphics">GitHub</a></div>
+    <button style={{marginTop:4}} onClick={clear}>CLEAR</button>
   </div>
     <div style={{padding:4}}>
       <div>Letters</div>
@@ -156,7 +184,7 @@ function App() {
           {l1}<br />
           {l2}<br />
           {l3}<br />
-          {l4}&nbsp;
+          <div style={l4?{}:{opacity:0}}>{l4||"_"}</div>
         </div>
         {rachel&&<img className={gold ? "rachelgold" : "rachel"} src={gold ? RachelGold : RachelNormal} />}
       </div>)
