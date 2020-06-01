@@ -104,7 +104,7 @@ function App() {
     
 
     <div style={{padding:4}}>
-      <div>Funny Text</div>
+      <div>Titles</div>
       <input placeholder="Line 1" value={l1} onChange={(ev) => setL1(ev.target.value)} /><br/>
       <input style={{marginTop:4}} placeholder="Line 2" value={l2} onChange={(ev) => setL2(ev.target.value)} /><br/>
       <input style={{marginTop:4}} placeholder="Line 3" value={l3} onChange={(ev) => setL3(ev.target.value)} /><br/>
