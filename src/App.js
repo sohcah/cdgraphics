@@ -2,6 +2,20 @@ import React from 'react';
 import './App.css';
 import RachelNormal from './RachelNormal.png';
 import RachelGold from './RachelGold.png';
+import domtoimage from 'dom-to-image';
+import {saveAs} from 'file-saver';
+
+function screenshot(i,date) {
+  console.log(i,date);
+  domtoimage.toBlob(document.getElementById('image'+i),{width:800,height:600})
+    .then(function (blob) {
+      console.log(blob);
+      saveAs(blob, date.replace(/\//g,'-')+i+'.png');
+    })
+    .catch(function (error) {
+      console.error('oops, something went wrong!', error);
+    });
+}
 
 function generateLetterTiles(letters, solution, x) {
   if (!solution) {
@@ -86,7 +100,7 @@ function App() {
     <br /><input placeholder="Line 4" value={l4} onChange={(ev) => setL4(ev.target.value)} />
     <br /><input placeholder="Date" value={date} onChange={(ev) => setDate(ev.target.value)} />
     {(
-      ["", ...solutions].map(i => generateLetterTiles(letters.toUpperCase(), i, { gold: false })).map(({ top, bottom, gold }) => <div className={gold ? "image gold" : "image"}>
+      ["", ...solutions].map((i,index) => generateLetterTiles(letters.toUpperCase(), i, { gold: false, index })).map(({ top, bottom, gold, index }) => <div onDoubleClick={()=>screenshot(index==0?'M':`S${index}`,date)} id={`image${index==0?'M':`S${index}`}`} className={gold ? "image gold" : "image"}>
         <div className="board" style={{ width: 600, height: 250, padding: 20, display: "flex", flexDirection: "column", justifyContent: "stretch" }}>
           <div className="rowWrapper">
             <div className="row">
