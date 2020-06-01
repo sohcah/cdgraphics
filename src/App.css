@@ -82,3 +82,23 @@
   justify-content: center;
   align-items: center;
 }
+.image.gold .board {
+  background-color: rgb(170, 169, 89);
+  display: block;
+  border: 8px solid rgb(113, 105, 56);
+}
+.image.gold .card {
+  border: 2px solid rgb(148, 139, 84);
+  background-color: rgb(196, 185, 117);
+}
+.image.gold .card.full {
+  background-color: rgb(113, 105, 56);
+  /* border-top: 4px solid rgb(0, 26, 78); */
+}
+.image.gold .selectionBox {
+  border: 6px solid rgb(148, 139, 84);
+  background-color: rgb(113, 105, 56);
+}
+.rowWrapper {
+  border: 4px solid rgb(148, 139, 84);
+}
