@@ -4,7 +4,7 @@ input, button {
   border: 1px solid black;
   background-color: white;
   font-family: 'Lexend Deca';
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
 }
 
 .image {
@@ -39,10 +39,20 @@ input, button {
   right: -90px;
 }
 
+.nick {
+  position: absolute;
+  bottom: -0px;
+  right: -60px;
+  height: 400px;
+}
+
 .board {
   background-color: #0040C0;
   display: block;
   border: 8px solid #7F7F7F;
+}
+.ttt .board {
+  margin-top: -110px;
 }
 
 .rowWrapper {

@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import Nick from './nick.png';
 import RachelNormal from './RachelNormal.png';
 import RachelGold from './RachelGold.png';
 import domtoimage from 'dom-to-image';
@@ -20,7 +21,7 @@ function screenshot(i,date) {
     });
 }
 
-function generateLetterTiles(letters, solution, x) {
+function generateLetterTiles(letters, solution, x, y) {
   if (!solution) {
     return {
       top: letters.split(''),
@@ -31,15 +32,17 @@ function generateLetterTiles(letters, solution, x) {
   } else {
     var top = letters.split('');
     var bottom = solution.split('');
-    for (var letter of bottom) {
-      top = [...top.slice(0, top.indexOf(letter)), null, ...top.slice(top.indexOf(letter) + 1)]
+    if(!y) {
+      for (var letter of bottom) {
+        top = [...top.slice(0, top.indexOf(letter)), null, ...top.slice(top.indexOf(letter) + 1)]
+      }
     }
     return {
       top,
       bottom,
       type: "letters",
       ...x,
-      gold: !top.find(i => i)
+      gold: !bottom.find(i => !i) && bottom.length >= 9
     }
   }
 }
@@ -55,6 +58,8 @@ function generate(i) {
 
 function App() {
   var arr = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  var [ttt, setTTT] = React.useState("");
+  var [showTop, setShowTop] = React.useState(false);
   var [letters, setLetters] = React.useState("");
   var [solutions, setSolutions] = React.useState([""]);
   var [l1, setL1] = React.useState("");
@@ -70,16 +75,19 @@ function App() {
   var [rachel,setRachel] = React.useState(true);
   React.useEffect(()=>{
     var data = JSON.parse(localStorage.data||"{}");
-    setLetters(data.letters);
-    setSolutions(data.solutions)
-    setL1(data.l1)
-    setL2(data.l2)
-    setL3(data.l3)
-    setL4(data.l4)
-    setDate(data.date);
-    setRachel(data.rachel);
+    setTTT(data.ttt||"");
+    setLetters(data.letters||"");
+    setSolutions(data.solutions||[])
+    setL1(data.l1||"")
+    setL2(data.l2||"")
+    setL3(data.l3||"")
+    setL4(data.l4||"")
+    setDate(data.date||"");
+    setRachel(data.rachel===undefined?true:data.rachel);
+    setShowTop(data.showTop===undefined?false:data.showTop);
   },[])
   function clear() {
+    setTTT("");
     setLetters("");
     setSolutions([""])
     setL1("")
@@ -88,10 +96,11 @@ function App() {
     setL4("")
     setDate("");
     setRachel(true);
+    setShowTop(false);
   }
   React.useEffect(()=>{
-    localStorage.data = JSON.stringify({letters,solutions,l1,l2,l3,l4,date,rachel});
-  },[letters,solutions.join(','),l1,l2,l3,l4,date,rachel])
+    localStorage.data = JSON.stringify({letters,solutions,l1,l2,l3,l4,date,rachel,ttt,showTop});
+  },[letters,solutions.join(','),l1,l2,l3,l4,date,rachel,ttt,showTop])
   // return (
   //   [[654,100,50,2,4,5,6]].map((l,gold)=><div className={gold?"image gold":"image"}>
   //     <div className="board" style={{width:600,height:400,padding:20,display:"flex",flexDirection:"column",justifyContent: "stretch"}}>
@@ -121,11 +130,11 @@ function App() {
   <div style={{padding:4}}>
     <div>Original design by <a href="https://www.facebook.com/100009965523845">Chloe Jones</a> for the <a href="https://www.facebook.com/groups/countdowners/">Countdowners Facebook group</a></div>
     <div>Generator developed by <a href="https://sohcah.dev">sohcah</a>, and open-sourced on <a href="https://github.com/sohcah/cdgraphics">GitHub</a></div>
-    <button style={{marginTop:4}} onClick={clear}>CLEAR</button>
+    <button style={{marginTop:4}} onClick={clear} style={{fontSize:20,backgroundColor:"#ffaaaa"}}>CLEAR</button>
   </div>
     <div style={{padding:4}}>
       <div>Letters</div>
-      <input value={letters} onChange={(ev) => setLetters(ev.target.value)} />
+      <input value={letters} onChange={(ev) => setLetters(ev.target.value.toUpperCase())} />
     </div>
     <div style={{padding:4}}>
       <div>Solutions</div>
@@ -136,25 +145,38 @@ function App() {
     
 
     <div style={{padding:4}}>
-      <div>Titles</div>
+      <div>Titles (Optional)</div>
       <input placeholder="Line 1" value={l1} onChange={(ev) => setL1(ev.target.value)} /><br/>
       <input style={{marginTop:4}} placeholder="Line 2" value={l2} onChange={(ev) => setL2(ev.target.value)} /><br/>
       <input style={{marginTop:4}} placeholder="Line 3" value={l3} onChange={(ev) => setL3(ev.target.value)} /><br/>
       <input style={{marginTop:4}} placeholder="Line 4" value={l4} onChange={(ev) => setL4(ev.target.value)} /><br/>
     </div>
     <div style={{padding:4}}>
-      <div>Date</div>
+      <div>Teaser Text (Optional, enabled TTT Mode) <b style={{backgroundColor:"limegreen",padding:4,borderRadius:8}}>NEW!</b></div>
+      <input style={{width:"100%"}} placeholder="TTT Text" value={ttt} onChange={(ev) => setTTT(ev.target.value)} />
+    </div>
+    <div style={{padding:4}}>
+      <div>Date (Optional)</div>
       <input placeholder="Date" value={date} onChange={(ev) => setDate(ev.target.value)} />
     </div>
     <div style={{padding:4}}>
-      Rachel <input type="checkbox" checked={rachel} onChange={(ev) => setRachel(ev.target.checked)} />
+      Rachel/Nick <input type="checkbox" checked={rachel} onChange={(ev) => setRachel(ev.target.checked)} />
+    </div>
+    <div style={{padding:4}}>
+      Keep Top Letters <input type="checkbox" checked={showTop} onChange={(ev) => setShowTop(ev.target.checked)} /> <b style={{backgroundColor:"limegreen",padding:4,borderRadius:8}}>NEW!</b>
     </div>
     <div style={{padding:4}}>
       <div>Click an image to save</div>
     </div>
     {(
-      ["", ...solutions].map((i,index) => generateLetterTiles(letters.toUpperCase(), i, { gold: false, index })).map(({ top, bottom, gold, index }) => <div onClick={()=>screenshot(index==0?'M':`S${index}`,date)} id={`image${index==0?'M':`S${index}`}`} className={gold ? "image gold" : "image"}>
+      ["", ...solutions].map((i,index) => generateLetterTiles(letters.toUpperCase(), i, { gold: false, index }, showTop)).map(({ top, bottom, gold, index }) => <div className={ttt?"ttt":""} id={`image${index==0?'M':`S${index}`}`}><div onClick={()=>screenshot(index==0?'M':`S${index}`,date)} className={gold ? "image gold" : "image"}>
         <div className="board" style={{ width: 600, height: 250, padding: 20, display: "flex", flexDirection: "column", justifyContent: "stretch" }}>
+          
+          {ttt&&<>
+            <div className="row" style={{flex:1,marginTop:-20,justifyContent:"center",alignItems:"center",color:"white",fontSize:20,textAlign:"center"}}>
+              {ttt}
+            </div>
+          </>}
           <div className="rowWrapper">
             <div className="row">
               {arr.map(i => <div className={`card ${top[i] && "full"}`}>{top[i] || ""}</div>)}
@@ -163,16 +185,18 @@ function App() {
               {arr.map(i => <div className={`card ${bottom[i] && "full"}`}>{bottom[i] || ""}</div>)}
             </div>
           </div>
-          <div style={{ flex: 1 }}></div>
-          <div className="row">
-            <div className="selectionBox">
-              VOWEL
-          </div>
-            <div style={{ flex: 2 }}></div>
-            <div className="selectionBox">
-              CONSONANT
-          </div>
-          </div>
+          {!ttt&&<>
+            <div style={{ flex: 1 }}></div>
+            <div className="row">
+              <div className="selectionBox">
+                VOWEL
+              </div>
+              <div style={{ flex: 2 }}></div>
+              <div className="selectionBox">
+                CONSONANT
+              </div>
+            </div>
+          </>}
         </div>
         <div style={{ position: "absolute", top: 8, right: 8, fontSize: 14, maxWidth: 300, color: "black" }}>
         Generated by cdgraphics.sohcah.dev
@@ -186,8 +210,8 @@ function App() {
           {l3}<br />
           <div style={l4?{}:{opacity:0}}>{l4||"_"}</div>
         </div>
-        {rachel&&<img className={gold ? "rachelgold" : "rachel"} src={gold ? RachelGold : RachelNormal} />}
-      </div>)
+        {rachel&&<img className={ttt ? "nick" : (gold ? "rachelgold" : "rachel")} src={ttt ? Nick : (gold ? RachelGold : RachelNormal)} />}
+      </div></div>)
     )}
   </div>;
 }
