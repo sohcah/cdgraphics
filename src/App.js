@@ -4,16 +4,16 @@ import Nick from './nick.png';
 import RachelNormal from './RachelNormal.png';
 import RachelGold from './RachelGold.png';
 import domtoimage from 'dom-to-image';
-import {saveAs} from 'file-saver';
+import { saveAs } from 'file-saver';
 
-function screenshot(i,date) {
-  console.log(i,date);
-  domtoimage.toBlob(document.getElementById('image'+i),{
-    width:800,
-    height:600
+function screenshot(i, date) {
+  console.log(i, date);
+  domtoimage.toBlob(document.getElementById('image' + i), {
+    width: 800,
+    height: 600
   })
     .then(function (blob) {
-      window.saveAs(blob, date.replace(/\//g,'-') + '-' + i + '.png');
+      window.saveAs(blob, date.replace(/\//g, '-') + '-' + i + '.png');
     })
     .catch(function (error) {
       alert(error);
@@ -32,7 +32,7 @@ function generateLetterTiles(letters, solution, x, y) {
   } else {
     var top = letters.split('');
     var bottom = solution.split('');
-    if(!y) {
+    if (!y) {
       for (var letter of bottom) {
         top = [...top.slice(0, top.indexOf(letter)), null, ...top.slice(top.indexOf(letter) + 1)]
       }
@@ -67,25 +67,26 @@ function App() {
   var [l3, setL3] = React.useState("");
   var [l4, setL4] = React.useState("");
   var [date, setDate] = React.useState("");
+  var [importText, setImport] = React.useState("");
   function setSolution(index, value) {
     var x = solutions.slice();
     x[index] = value.toUpperCase();
     setSolutions(x);
   }
-  var [rachel,setRachel] = React.useState(true);
-  React.useEffect(()=>{
-    var data = JSON.parse(localStorage.data||"{}");
-    setTTT(data.ttt||"");
-    setLetters(data.letters||"");
-    setSolutions(data.solutions||[])
-    setL1(data.l1||"")
-    setL2(data.l2||"")
-    setL3(data.l3||"")
-    setL4(data.l4||"")
-    setDate(data.date||"");
-    setRachel(data.rachel===undefined?true:data.rachel);
-    setShowTop(data.showTop===undefined?false:data.showTop);
-  },[])
+  var [rachel, setRachel] = React.useState(true);
+  React.useEffect(() => {
+    var data = JSON.parse(localStorage.data || "{}");
+    setTTT(data.ttt || "");
+    setLetters(data.letters || "");
+    setSolutions(data.solutions || [])
+    setL1(data.l1 || "")
+    setL2(data.l2 || "")
+    setL3(data.l3 || "")
+    setL4(data.l4 || "")
+    setDate(data.date || "");
+    setRachel(data.rachel === undefined ? true : data.rachel);
+    setShowTop(data.showTop === undefined ? false : data.showTop);
+  }, [])
   function clear() {
     setTTT("");
     setLetters("");
@@ -98,9 +99,9 @@ function App() {
     setRachel(true);
     setShowTop(false);
   }
-  React.useEffect(()=>{
-    localStorage.data = JSON.stringify({letters,solutions,l1,l2,l3,l4,date,rachel,ttt,showTop});
-  },[letters,solutions.join(','),l1,l2,l3,l4,date,rachel,ttt,showTop])
+  React.useEffect(() => {
+    localStorage.data = JSON.stringify({ letters, solutions, l1, l2, l3, l4, date, rachel, ttt, showTop });
+  }, [letters, solutions.join(','), l1, l2, l3, l4, date, rachel, ttt, showTop])
   // return (
   //   [[654,100,50,2,4,5,6]].map((l,gold)=><div className={gold?"image gold":"image"}>
   //     <div className="board" style={{width:600,height:400,padding:20,display:"flex",flexDirection:"column",justifyContent: "stretch"}}>
@@ -126,54 +127,117 @@ function App() {
   //     <img className={gold?"rachelgold":"rachel"} src={gold?RachelGold:RachelNormal} />
   //   </div>)
   // );
+
+  function runImport() {
+    let t = importText.split('\n').map(i=>i.split('-'));
+    var titles = ``;
+    var solutions = [];
+    for(var [k,i] of t) {
+      switch (k.toUpperCase()) {
+        case 'L':
+          setLetters(i);
+          break;
+        case 'S':
+          solutions.push(i);
+          break;
+        case 'T':
+          titles+=`\n${i}`;
+          break;
+        case 'X':
+        case 'TTT':
+          setTTT(i);
+          break;
+        case 'D':
+          setDate(i);
+          break;
+        case 'R':
+          setRachel(true);
+          if(i.toUpperCase()==="FALSE") setRachel(false);
+          break;
+        case 'K':
+          setShowTop(false);
+          if(i.toUpperCase()==="TRUE") setShowTop(true);
+          break;
+      }
+    }
+    setSolutions(solutions);
+    setL4(titles.split('\n').reverse()[0])
+    setL3(titles.split('\n').reverse()[1])
+    setL2(titles.split('\n').reverse()[2])
+    setL1(titles.split('\n').reverse()[3])
+  }
+
   return <div>
-  <div style={{padding:4}}>
-    <div>Original design by <a href="https://www.facebook.com/100009965523845">Chloe Jones</a> for the <a href="https://www.facebook.com/groups/countdowners/">Countdowners Facebook group</a></div>
-    <div>Generator developed by <a href="https://sohcah.dev">sohcah</a>, and open-sourced on <a href="https://github.com/sohcah/cdgraphics">GitHub</a></div>
-    <button style={{marginTop:4}} onClick={clear} style={{fontSize:20,backgroundColor:"#ffaaaa"}}>CLEAR</button>
-  </div>
-    <div style={{padding:4}}>
+    <div style={{ padding: 4 }}>
+      <div>Original design by <a href="https://www.facebook.com/100009965523845">Chloe Jones</a> for the <a href="https://www.facebook.com/groups/countdowners/">Countdowners Facebook group</a></div>
+      <div>Generator developed by <a href="https://sohcah.dev">sohcah</a>, and open-sourced on <a href="https://github.com/sohcah/cdgraphics">GitHub</a></div>
+      <button style={{ marginTop: 4 }} onClick={clear} style={{ fontSize: 20, backgroundColor: "#ffaaaa" }}>CLEAR</button>
+    </div>
+    <div style={{ padding: 4 }}>
+      <div>Import from Data (<span onClick={()=>setImport(`#- Comments start with #- and are ignored
+#- Letter Selection
+L-DOWNCOUNT
+#- Solutions - You can put any number of solutions
+S-COUNTDOWN
+S-COUNT
+#- Titles - You can put anywhere between 0 and 4 T- lines, and you can use Empty Lines too. [Optional]
+T-Line1
+T-Line2
+T-Line3
+T-Line4
+#- TTT Text - Can also start with TTT- [Optional]
+X-This is a teaser text
+#- Date [Optional]
+D-25/12/2020
+#- Show Nick/Rachel [Optional]
+R-TRUE
+#- Keep Top Letters [Optional]
+K-FALSE`)} style={{color:"blue"}}>Click for Example</span>)</div>
+      <textarea style={{minHeight:100,minWidth:400}} value={importText} onChange={(ev) => setImport(ev.target.value)} /><br/>
+      <button style={{ marginTop: 4 }} onClick={() => runImport()}>Import</button>
+    </div>
+    <div style={{ padding: 4 }}>
       <div>Letters</div>
       <input value={letters} onChange={(ev) => setLetters(ev.target.value.toUpperCase())} />
     </div>
-    <div style={{padding:4}}>
+    <div style={{ padding: 4 }}>
       <div>Solutions</div>
-      {Object.keys(solutions).map(i => <><input style={{marginTop:i!=="0"?4:0}} placeholder={`Solution ${Number(i) + 1}`} value={solutions[i]} onChange={(ev) => setSolution(i, ev.target.value)} /><br /></>)}
-      <button style={{marginTop:4}} onClick={() => setSolutions([...solutions, ""])}>Add</button>
+      {Object.keys(solutions).map(i => <><input style={{ marginTop: i !== "0" ? 4 : 0 }} placeholder={`Solution ${Number(i) + 1}`} value={solutions[i]} onChange={(ev) => setSolution(i, ev.target.value)} /><br /></>)}
+      <button style={{ marginTop: 4 }} onClick={() => setSolutions([...solutions, ""])}>Add</button>
     </div>
-    
-    
 
-    <div style={{padding:4}}>
+
+
+    <div style={{ padding: 4 }}>
       <div>Titles (Optional)</div>
-      <input placeholder="Line 1" value={l1} onChange={(ev) => setL1(ev.target.value)} /><br/>
-      <input style={{marginTop:4}} placeholder="Line 2" value={l2} onChange={(ev) => setL2(ev.target.value)} /><br/>
-      <input style={{marginTop:4}} placeholder="Line 3" value={l3} onChange={(ev) => setL3(ev.target.value)} /><br/>
-      <input style={{marginTop:4}} placeholder="Line 4" value={l4} onChange={(ev) => setL4(ev.target.value)} /><br/>
+      <input placeholder="Line 1" value={l1} onChange={(ev) => setL1(ev.target.value)} /><br />
+      <input style={{ marginTop: 4 }} placeholder="Line 2" value={l2} onChange={(ev) => setL2(ev.target.value)} /><br />
+      <input style={{ marginTop: 4 }} placeholder="Line 3" value={l3} onChange={(ev) => setL3(ev.target.value)} /><br />
+      <input style={{ marginTop: 4 }} placeholder="Line 4" value={l4} onChange={(ev) => setL4(ev.target.value)} /><br />
     </div>
-    <div style={{padding:4}}>
-      <div>Teaser Text (Optional, enabled TTT Mode) <b style={{backgroundColor:"limegreen",padding:4,borderRadius:8}}>NEW!</b></div>
-      <input style={{width:"100%"}} placeholder="TTT Text" value={ttt} onChange={(ev) => setTTT(ev.target.value)} />
+    <div style={{ padding: 4 }}>
+      <div>Teaser Text (Optional, enabled TTT Mode) <b style={{ backgroundColor: "limegreen", padding: 4, borderRadius: 8 }}>NEW!</b></div>
+      <input style={{ width: "100%" }} placeholder="TTT Text" value={ttt} onChange={(ev) => setTTT(ev.target.value)} />
     </div>
-    <div style={{padding:4}}>
+    <div style={{ padding: 4 }}>
       <div>Date (Optional)</div>
       <input placeholder="Date" value={date} onChange={(ev) => setDate(ev.target.value)} />
     </div>
-    <div style={{padding:4}}>
+    <div style={{ padding: 4 }}>
       Rachel/Nick <input type="checkbox" checked={rachel} onChange={(ev) => setRachel(ev.target.checked)} />
     </div>
-    <div style={{padding:4}}>
-      Keep Top Letters <input type="checkbox" checked={showTop} onChange={(ev) => setShowTop(ev.target.checked)} /> <b style={{backgroundColor:"limegreen",padding:4,borderRadius:8}}>NEW!</b>
+    <div style={{ padding: 4 }}>
+      Keep Top Letters <input type="checkbox" checked={showTop} onChange={(ev) => setShowTop(ev.target.checked)} /> <b style={{ backgroundColor: "limegreen", padding: 4, borderRadius: 8 }}>NEW!</b>
     </div>
-    <div style={{padding:4}}>
+    <div style={{ padding: 4 }}>
       <div>Click an image to save</div>
     </div>
     {(
-      ["", ...solutions].map((i,index) => generateLetterTiles(letters.toUpperCase(), i, { gold: false, index }, showTop)).map(({ top, bottom, gold, index }) => <div className={ttt?"ttt":""} id={`image${index==0?'M':`S${index}`}`}><div onClick={()=>screenshot(index==0?'M':`S${index}`,date)} className={gold ? "image gold" : "image"}>
+      ["", ...solutions].map((i, index) => generateLetterTiles(letters.toUpperCase(), i, { gold: false, index }, showTop)).map(({ top, bottom, gold, index }) => <div className={ttt ? "ttt" : ""} id={`image${index == 0 ? 'M' : `S${index}`}`}><div onClick={() => screenshot(index == 0 ? 'M' : `S${index}`, date)} className={gold ? "image gold" : "image"}>
         <div className="board" style={{ width: 600, height: 250, padding: 20, display: "flex", flexDirection: "column", justifyContent: "stretch" }}>
-          
-          {ttt&&<>
-            <div className="row" style={{flex:1,marginTop:-20,justifyContent:"center",alignItems:"center",color:"white",fontSize:20,textAlign:"center"}}>
+
+          {ttt && <>
+            <div className="row" style={{ flex: 1, marginTop: -20, justifyContent: "center", alignItems: "center", color: "white", fontSize: 20, textAlign: "center" }}>
               {ttt}
             </div>
           </>}
@@ -185,7 +249,7 @@ function App() {
               {arr.map(i => <div className={`card ${bottom[i] && "full"}`}>{bottom[i] || ""}</div>)}
             </div>
           </div>
-          {!ttt&&<>
+          {!ttt && <>
             <div style={{ flex: 1 }}></div>
             <div className="row">
               <div className="selectionBox">
@@ -199,7 +263,7 @@ function App() {
           </>}
         </div>
         <div style={{ position: "absolute", top: 8, right: 8, fontSize: 14, maxWidth: 300, color: "black" }}>
-        Generated by cdgraphics.sohcah.dev
+          Generated by cdgraphics.sohcah.dev
         </div>
         <div style={{ position: "absolute", bottom: 16, left: 16, fontSize: 20, maxWidth: 200, color: "white" }}>
           {date}
@@ -208,9 +272,9 @@ function App() {
           {l1}<br />
           {l2}<br />
           {l3}<br />
-          <div style={l4?{}:{opacity:0}}>{l4||"_"}</div>
+          <div style={l4 ? {} : { opacity: 0 }}>{l4 || "_"}</div>
         </div>
-        {rachel&&<img className={ttt ? "nick" : (gold ? "rachelgold" : "rachel")} src={ttt ? Nick : (gold ? RachelGold : RachelNormal)} />}
+        {rachel && <img className={ttt ? "nick" : (gold ? "rachelgold" : "rachel")} src={ttt ? Nick : (gold ? RachelGold : RachelNormal)} />}
       </div></div>)
     )}
   </div>;
