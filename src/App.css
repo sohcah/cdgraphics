@@ -46,6 +46,13 @@ input, button {
   height: 400px;
 }
 
+.whiteley {
+  position: absolute;
+  bottom: -0px;
+  right: -140px;
+  height: 300px;
+}
+
 .board {
   background-color: #0040C0;
   display: block;
@@ -76,6 +83,7 @@ input, button {
   display: flex;
   justify-content: center;
   align-items: center;
+  /* font-weight: 700; */
 }
 .card.n100 {
   letter-spacing: -2px;
