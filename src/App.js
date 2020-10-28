@@ -260,7 +260,7 @@ K-FALSE`)} style={{color:"blue"}}>Click for Example</span>)</div>
       <div>Click an image to save</div>
     </div>
     {(
-      ["", ...solutions].map((i, index) => generateLetterTiles(letters.toUpperCase(), i, { gold: false, index }, showTop)).map(({ top, bottom, gold, index }) => <div className={ttt ? "ttt" : ""} id={`image${index == 0 ? 'M' : `S${index}`}`}><div onClick={() => screenshot(index == 0 ? 'M' : `S${index}`, date)} className={gold ? "image gold" : (halloween ? "image halloween" : "image")}>
+      ["", ...solutions].map((i, index) => generateLetterTiles(letters.toUpperCase(), i, { gold: false, index }, showTop)).map(({ top, bottom, gold, index }) => <div className={ttt ? "ttt" : ""} id={`image${index == 0 ? 'M' : `S${index}`}`}><div onClick={() => screenshot(index == 0 ? 'M' : `S${index}`, date)} className={halloween ? "image halloween" : (gold ? "image gold" : "image")}>
         <div className="board" style={{ width: 600, height: 250, padding: 20, display: "flex", flexDirection: "column", justifyContent: "stretch" }}>
 
           {ttt && <>
