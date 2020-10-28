@@ -63,6 +63,7 @@ function App() {
   var [showTop, setShowTop] = React.useState(false);
   var [useWhiteley, setUseWhiteley] = React.useState(false);
   var [newFont, setNewFont] = React.useState(false);
+  var [halloween, setHalloween] = React.useState(false);
   var [letters, setLetters] = React.useState("");
   var [solutions, setSolutions] = React.useState([""]);
   var [l1, setL1] = React.useState("");
@@ -243,6 +244,9 @@ K-FALSE`)} style={{color:"blue"}}>Click for Example</span>)</div>
     <div style={{ padding: 4 }}>
       Rachel/Nick <input type="checkbox" checked={rachel} onChange={(ev) => setRachel(ev.target.checked)} />
     </div>
+    <div style={{ padding: 4 }}>
+      Halloween <input type="checkbox" checked={halloween} onChange={(ev) => setHalloween(ev.target.checked)} />
+    </div>
     {/* {ttt&&<div style={{ padding: 4 }}>
       Whiteley <input type="checkbox" checked={useWhiteley} onChange={(ev) => setUseWhiteley(ev.target.checked)} />
     </div>} */}
@@ -256,7 +260,7 @@ K-FALSE`)} style={{color:"blue"}}>Click for Example</span>)</div>
       <div>Click an image to save</div>
     </div>
     {(
-      ["", ...solutions].map((i, index) => generateLetterTiles(letters.toUpperCase(), i, { gold: false, index }, showTop)).map(({ top, bottom, gold, index }) => <div className={ttt ? "ttt" : ""} id={`image${index == 0 ? 'M' : `S${index}`}`}><div onClick={() => screenshot(index == 0 ? 'M' : `S${index}`, date)} className={gold ? "image gold" : "image"}>
+      ["", ...solutions].map((i, index) => generateLetterTiles(letters.toUpperCase(), i, { gold: false, index }, showTop)).map(({ top, bottom, gold, index }) => <div className={ttt ? "ttt" : ""} id={`image${index == 0 ? 'M' : `S${index}`}`}><div onClick={() => screenshot(index == 0 ? 'M' : `S${index}`, date)} className={gold ? "image gold" : (halloween ? "image halloween" : "image")}>
         <div className="board" style={{ width: 600, height: 250, padding: 20, display: "flex", flexDirection: "column", justifyContent: "stretch" }}>
 
           {ttt && <>

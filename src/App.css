@@ -20,6 +20,10 @@ input, button {
 .image.gold {
   background-image: url("FlagGold.png"), url("BackgroundGold.png");
 }
+.image.halloween {
+  /* background-image: url("FlagBlack.png"), url("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwallpapercave.com%2Fwp%2F47MnHmd.jpg&f=1&nofb=1"); */
+  background-image: url("FlagBlack.png"), url("BackgroundHalloween.jpg");
+}
 
 .numberGrid {
   border: 4px solid #7F7F7F;
@@ -125,6 +129,30 @@ input, button {
 .image.gold .selectionBox {
   border: 6px solid rgb(148, 139, 84);
   background-color: rgb(113, 105, 56);
+}
+
+.image.halloween .board {
+  background-color: rgb(255, 94, 0);
+  display: block;
+  border: 8px solid rgb(0, 0, 0);
+}
+.image.halloween .card {
+  border: 2px solid rgb(0, 0, 0);
+  background-color: rgb(255, 208, 0);
+}
+.image.halloween .card.full {
+  background-color: rgb(255, 208, 0);
+  color: black;
+  /* border-top: 4px solid rgb(0, 26, 78); */
+}
+.image.halloween .selectionBox {
+  border: 6px solid rgb(0, 0, 0);
+  background-color: rgb(255, 208, 0);
+  color: black;
+
+}
+.image.halloween .rowWrapper {
+  border: 4px solid rgb(0, 0, 0);
 }
 .rowWrapper {
   border: 4px solid rgb(148, 139, 84);
