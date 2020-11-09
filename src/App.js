@@ -186,6 +186,9 @@ function App() {
   }
 
   return <div>
+    <div onClick={()=>window.location.href="https://reverseenumerate.sohcah.dev"} style={{ cursor: "pointer", margin: 4, backgroundColor: "lightskyblue", padding: 8, borderRadius: 8, fontSize: 24 }}>
+      Try out the new graphics generator beta here!
+    </div>
     <div style={{ padding: 4 }}>
       <div>Original design by <a href="https://www.facebook.com/100009965523845">Chloe Jones</a> for the <a href="https://www.facebook.com/groups/countdowners/">Countdowners Facebook group</a></div>
       <div>Generator developed by <a href="https://sohcah.dev">sohcah</a>, and open-sourced on <a href="https://github.com/sohcah/cdgraphics">GitHub</a></div>
